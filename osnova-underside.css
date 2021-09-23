@@ -1,0 +1,103 @@
+.thesis__spy_button.thesis__attach_something {
+	color: #1F1F3B;
+}
+
+.thesis__spy_button.thesis__attach_something:hover {
+	color: var(--primary-color);
+}
+
+.thesis__spy_button.thesis__attach_something .material-icons {
+	display: block;
+	position: relative;
+	margin: 9px 8px 7px;
+	font-size: 18px;
+	height: 18px;
+	line-height: 18px;
+}
+
+.thesis__spy_button.thesis__attach_something.is-encrypted .material-icons {
+	margin: 7px 8px;
+	font-size: 22px;
+	height: 22px;
+	line-height: 22px;
+}
+
+.thesis__spy_button.thesis__attach_something .material-icons.material-icons--hidden {
+	display: none;
+	visibility: hidden;
+	opacity: 0;
+}
+
+.thesis__spy_button.thesis__attach_something {
+	user-select: none;
+	-ms-user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+}
+
+.comment-unspy-button {
+	font-size: 16px;
+	line-height: 16px;
+	color: #888888;
+	
+	border: none;
+	outline: none;
+	cursor: pointer;
+	-webkit-tap-highlight-color: transparent;
+
+	user-select: none;
+	-ms-user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+
+	transition: color 300ms ease-in-out 0s;
+}
+
+.comments__item__self > .comment-unspy-button {
+	display: inline-block;
+	width: 16px;
+	height: 14px;
+	margin-right: 15px;
+	order: 2;	
+}
+
+.comment__footer > .comment-unspy-button {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	margin-left: 15px;
+}
+
+.comment-unspy-button .material-icons {
+	font-size: 16px;
+	line-height: 16px;
+	color: #888888;
+
+	position: absolute;
+	transition: opacity 300ms ease-in-out 0s;
+}
+
+.comment-unspy-button .material-icons:first-of-type {
+	opacity: 1;
+}
+
+.comment-unspy-button .material-icons:last-of-type {
+	opacity: 0;
+}
+
+.comment-unspy-button.is-active,
+.comment-unspy-button.is-active .material-icons {
+	color: var(--primary-color);
+}
+
+.comment-unspy-button.is-active .material-icons:first-of-type {
+	opacity: 0;
+}
+
+.comment-unspy-button.is-active .material-icons:last-of-type {
+	opacity: 1;
+}
+
+.comment.s42-underside-active > .comment__space > .comment__self .comment__copy-link {
+	opacity: 1;
+}
