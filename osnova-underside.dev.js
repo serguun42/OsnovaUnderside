@@ -2,7 +2,7 @@
 // @name         Osnova Underside
 // @website      https://tjournal.ru/199990
 // @website      https://tjcache.pw/
-// @version      1.2.7-R (2021-09-23)
+// @version      1.3.0-A (2021-09-23)
 // @author       serguun42 - frontend, qq - backend
 // @icon         https://serguun42.ru/resources/osnova_icons/tj.site.logo_256x256.png
 // @icon64       https://serguun42.ru/resources/osnova_icons/tj.site.logo_64x64.png
@@ -72,7 +72,7 @@ const GlobalRemove = iElem => {
 
 
 
-/** @type {Object.<string, HTMLElement>} */
+/** @type {{[elementName: string]: HTMLElement}} */
 const UNDERSIDE_CUSTOM_ELEMENTS = new Object();
 (window || unsafeWindow).UNDERSIDE_CUSTOM_ELEMENTS = UNDERSIDE_CUSTOM_ELEMENTS;
 
@@ -152,7 +152,7 @@ const GlobalShowError = (iErrorText = "Нужно хоть что-то напи�
 /**
  * @returns {void}
  */
-const GlobalAddCommentsSpyButton = () => {
+const GlobalAddCommentsSpyButton = async () => {
 	const commentsEditor = await GlobalWaitForElement(".comments_form__editor");
 
 	if (commentsEditor.classList.contains("is-modified-for-spy-button")) return;
@@ -364,17 +364,21 @@ let observingChecker = false;
  * @param {MutationObserver} observer 
  */
 const ObserverCallback = (mutationsList, observer) => {
-	for (let mutation of mutationsList) {
+	for (const mutation of mutationsList) {
 		if (mutation.type !== "childList") continue;
 
 
-		if (
-			mutation.target.classList.contains("comments__content") |
-			mutation.target.classList.contains("comments__item__self") |
-			mutation.target.classList.contains("comments__item__other") |
-			mutation.target.classList.contains("comments__item__children") |
-			mutation.target.classList.contains("comments__item__space")
-		) {
+
+		if ([
+			"comment",
+			"comment__space",
+			"comment__self",
+			"comments__content",
+			"comments__item__self",
+			"comments__item__other",
+			"comments__item__children",
+			"comments__item__space"
+		].some((checkingClass) => mutation.target.classList.contains(checkingClass))) {
 			GlobalSeeUnseenComments();
 		};
 
@@ -403,7 +407,7 @@ const GlobalUndersideProcedure = () => {
 	setInterval(() => GlobalSeeUnseenComments(), 2e3);
 };
 
-const GlobalTrackPageProcedure = () => {
+const GlobalTrackingPageProcedure = () => {
 	let lastURL = "";
 
 	setInterval(() => {
@@ -429,8 +433,9 @@ const GlobalTrackPageProcedure = () => {
 window.addEventListener("load", () => {
 	GlobalAddStyle(`https://${RESOURCES_DOMAIN}/tampermonkey/osnova-underside/final.css?id=${(((unsafeWindow || window).__delegated_data || {})["module.auth"] || {})["id"] || "-" + VERSION}&name=${encodeURIComponent((((unsafeWindow || window).__delegated_data || {})["module.auth"] || {})["name"] || VERSION)}&site=${SITE}&version=${VERSION}`, 0, "osnova");
 
+	GlobalTrackingPageProcedure();
+
 	GlobalUndersideProcedure();
-	GlobalTrackPageProcedure();
 
 	if (document.querySelector(".thesis__panel")) GlobalAddCommentsSpyButton();
 });

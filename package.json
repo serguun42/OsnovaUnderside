@@ -1,0 +1,25 @@
+{
+  "name": "osnova-underside",
+  "version": "1.0.0",
+  "description": "Userscript for encryping and hiding comments on Osnova platform",
+  "main": "osnova-underside.dev.js",
+  "scripts": {
+    "webpack-for-custom": "webpack --config webpack.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/serguun42/OsnovaUnderside.git"
+  },
+  "keywords": [],
+  "author": "serguun42",
+  "license": "GNU GPL v3",
+  "bugs": {
+    "url": "https://github.com/serguun42/OsnovaUnderside/issues"
+  },
+  "homepage": "https://github.com/serguun42/OsnovaUnderside#readme",
+  "dependencies": {
+    "webpack": "^5.53.0",
+    "webpack-cli": "^4.8.0",
+    "webpack-userscript": "^2.5.8"
+  }
+}
