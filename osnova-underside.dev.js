@@ -2,7 +2,7 @@
 // @name         Osnova Underside
 // @website      https://tjournal.ru/199990
 // @website      https://tjcache.pw/
-// @version      1.3.0-A (2021-09-23)
+// @version      1.3.1-A (2021-09-26)
 // @author       serguun42 - frontend, qq - backend
 // @icon         https://serguun42.ru/resources/osnova_icons/tj.site.logo_256x256.png
 // @icon64       https://serguun42.ru/resources/osnova_icons/tj.site.logo_64x64.png
@@ -27,7 +27,18 @@
 const
 	SITE = window.location.hostname.split(".")[0],
 	RESOURCES_DOMAIN = "serguun42.ru",
-	VERSION = "1.2.7";
+	VERSION = "1.3.1";
+
+
+
+/** @param {String} query @returns {HTMLElement} */ const QS = query => document.querySelector(query);
+/** @param {String} query @returns {HTMLElement[]} */ const QSA = query => Array.from(document.querySelectorAll(query));
+/** @param {String} query @returns {HTMLElement} */ const GEBI = query => document.getElementById(query);
+/** @param {HTMLElement} elem @returns {void} */ const GR = elem => {
+	if (elem instanceof HTMLElement)
+		(elem.parentElement || elem.parentNode).removeChild(elem);
+};
+
 
 
 /**
@@ -47,13 +58,13 @@ const GlobalWaitForElement = iKey => {
 			}, 50);
 		});
 	} else {
-		if (document.querySelector(iKey)) return Promise.resolve(document.querySelector(iKey));
+		if (QS(iKey)) return Promise.resolve(QS(iKey));
 
 		return new Promise((resolve) => {
 			let interval = setInterval(() => {
-				if (document.querySelector(iKey)) {
+				if (QS(iKey)) {
 					clearInterval(interval);
-					resolve(document.querySelector(iKey));
+					resolve(QS(iKey));
 				};
 			}, 50);
 		});
@@ -107,7 +118,7 @@ const GlobalAddStyle = (iLink, iPriority, iDataFor = false) => {
 
 
 GlobalWaitForElement("document.body").then(() => {
-	if (!document.getElementById("container-for-custom-elements-0")) {
+	if (!GEBI("container-for-custom-elements-0")) {
 		const container = document.createElement("div");
 			  container.id = "container-for-custom-elements-0";
 			  container.dataset.author = "serguun42";
@@ -133,7 +144,7 @@ const GlobalShowError = (iErrorText = "Нужно хоть что-то напи�
 		  notification.style.height = "74px";
 		  notification.innerHTML = `<i><svg class="icon icon--ui_cancel" width="100%" height="100%"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#ui_cancel"></use></svg></i><p>${iErrorText}</p>`;
 
-	document.getElementById("notify").appendChild(notification);
+	GEBI("notify").appendChild(notification);
 
 
 	setTimeout(() => {
@@ -247,15 +258,12 @@ const GlobalAddCommentsSpyButton = async () => {
 };
 
 const GlobalSeeUnseenComments = () => {
-	const comments = [
-		...Array.from(document.querySelectorAll(".comments__item__space:not(.s42-underside-seen)")),
-		...Array.from(document.querySelectorAll(".comment:not(.s42-underside-seen)"))
-	].filter((value, index, array) => !!value && index === array.indexOf(value));;
+	const comments = QSA(".comment:not(.s42-underside-seen)");
 
 	comments.forEach((comment) => {
 		comment.classList.add("s42-underside-seen");
 
-		const commentTextElem = comment.querySelector(".comments__item__text") || comment.querySelector(".comment__text");
+		const commentTextElem = comment.querySelector(".comment__text");
 		if (!commentTextElem) return;
 
 		const commentText = commentTextElem?.innerText || "";
@@ -348,9 +356,9 @@ const GlobalSeeUnseenComments = () => {
 			};
 		});
 
-		const elemToPlace = comment.querySelector(".comment__footer") || comment.querySelector(".comments__item__self");
+		const commentFooter = comment.querySelector(".comment__footer");
 
-		if (elemToPlace) elemToPlace.appendChild(unspyButton);
+		if (commentFooter) commentFooter.appendChild(unspyButton);
 		comment.classList.add("s42-underside-active");
 	});
 };
@@ -376,8 +384,7 @@ const ObserverCallback = (mutationsList, observer) => {
 			"comments__content",
 			"comments__item__self",
 			"comments__item__other",
-			"comments__item__children",
-			"comments__item__space"
+			"comments__item__children"
 		].some((checkingClass) => mutation.target.classList.contains(checkingClass))) {
 			GlobalSeeUnseenComments();
 		};
@@ -412,13 +419,13 @@ const GlobalTrackingPageProcedure = () => {
 
 	setInterval(() => {
 		if (lastURL === window.location.pathname) return;
-		if (document.querySelector(".main_progressbar--in_process")) return;
+		if (QS(".main_progressbar--in_process")) return;
 
 		lastURL = window.location.pathname;
 
 
 		/* Actual Tracking Page Procedure */
-		if (document.querySelector(".thesis__panel")) GlobalAddCommentsSpyButton();
+		if (QS(".thesis__panel")) GlobalAddCommentsSpyButton();
 
 
 		const contentID = parseInt(/^\/(?:u|s)\//.test(window.location.pathname) ? window.location.pathname.match(/^\/(?:u|s)\/[^\/]+\/(\d+)/)?.[1] : window.location.pathname.match(/^\/\w+\/(\d+)/)?.[1]);
@@ -437,5 +444,5 @@ window.addEventListener("load", () => {
 
 	GlobalUndersideProcedure();
 
-	if (document.querySelector(".thesis__panel")) GlobalAddCommentsSpyButton();
+	if (QS(".thesis__panel")) GlobalAddCommentsSpyButton();
 });

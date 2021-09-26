@@ -7,7 +7,7 @@ module.exports = {
 	path: __dirname,
 	headers: {
 		"name":         "Osnova Underside",
-		"version":      "1.3.0-R (2021-09-23)",
+		"version":      "1.3.1-R (2021-09-26)",
 		"author":       "serguun42 - frontend, qq - backend",
 		"icon":         "https://serguun42.ru/resources/osnova_icons/tj.site.logo_256x256.png",
 		"icon64":       "https://serguun42.ru/resources/osnova_icons/tj.site.logo_64x64.png",
