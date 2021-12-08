@@ -1,6 +1,6 @@
 {
   "name": "osnova-underside",
-  "version": "1.0.0",
+  "version": "1.3.3",
   "description": "Userscript for encryping and hiding comments on Osnova platform",
   "main": "osnova-underside.dev.js",
   "scripts": {

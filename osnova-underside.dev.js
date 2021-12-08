@@ -2,7 +2,7 @@
 // @name         Osnova Underside
 // @website      https://tjournal.ru/199990
 // @website      https://tjcache.pw/
-// @version      1.3.1-A (2021-09-26)
+// @version      1.3.3-A (2021-12-08)
 // @author       serguun42 - frontend, qq - backend
 // @icon         https://serguun42.ru/resources/osnova_icons/tj.site.logo_256x256.png
 // @icon64       https://serguun42.ru/resources/osnova_icons/tj.site.logo_64x64.png
@@ -27,7 +27,7 @@
 const
 	SITE = window.location.hostname.split(".")[0],
 	RESOURCES_DOMAIN = "serguun42.ru",
-	VERSION = "1.3.1";
+	VERSION = "1.3.3";
 
 
 
@@ -54,7 +54,7 @@ const GlobalWaitForElement = iKey => {
 				if (document.body) {
 					clearInterval(interval);
 					resolve(document.body);
-				};
+				}
 			}, 50);
 		});
 	} else {
@@ -65,10 +65,10 @@ const GlobalWaitForElement = iKey => {
 				if (QS(iKey)) {
 					clearInterval(interval);
 					resolve(QS(iKey));
-				};
+				}
 			}, 50);
 		});
-	};
+	}
 };
 
 /**
@@ -124,7 +124,7 @@ GlobalWaitForElement("document.body").then(() => {
 			  container.dataset.author = "serguun42";
 
 		document.body.appendChild(container);
-	};
+	}
 });
 
 
@@ -199,7 +199,7 @@ const GlobalAddCommentsSpyButton = async () => {
 				attachSpyButton.classList.remove("is-encrypted");
 				attachSpyButtonIcon.innerHTML = "visibility_off";
 				return;
-			};
+			}
 
 
 			let encoded = "",
@@ -241,7 +241,7 @@ const GlobalAddCommentsSpyButton = async () => {
 			if (fakeMessage) {
 				inputDone = 1;
 				LocalProceed();
-			};
+			}
 		});
 
 
@@ -275,7 +275,7 @@ const GlobalSeeUnseenComments = () => {
 		const encryptedPart = matchForEncrypted[1];
 
 		const unspyButton = document.createElement("span");
-			  unspyButton.className = "comment-unspy-button";
+			  unspyButton.className = "comment__action comment-unspy-button";
 
 		const unspyButtonIconOff = document.createElement("span");
 			  unspyButtonIconOff.className = "material-icons material-icons-round";
@@ -297,21 +297,22 @@ const GlobalSeeUnseenComments = () => {
 
 
 		const LocalGetLayoutForDecryptedMessage = () => decryptedMessage.split("\n").map((partOfDecryptedMessage) => {
-			let paragraph = document.createElement("p");
-				paragraph.append(
-					...partOfDecryptedMessage.split(/(<ce-command data-id="?\d+"? [^>]+>@[^<\n]{0,32}<\/ce-command>)/).map((splittedByMentions) => {
-						let matchForMention = splittedByMentions.match(/<ce-command data-id="?(\d+)"? [^>]+>(@[^<\n]{0,32})<\/ce-command>/);
+			const paragraph = document.createElement("p");
 
-						if (matchForMention && matchForMention[1] && matchForMention[2]) {
-							let anchor = document.createElement("a");
-								anchor.href = encodeURI(window.location.origin + "/u/" + matchForMention[1]);
-								anchor.innerText = matchForMention[2];
+			paragraph.append(
+				...partOfDecryptedMessage.split(/(<ce-command data-id="?\d+"? [^>]+>@[^<\n]{0,32}<\/ce-command>)/).map((splittedByMentions) => {
+					const matchForMention = splittedByMentions.match(/<ce-command data-id="?(\d+)"? [^>]+>(@[^<\n]{0,32})<\/ce-command>/);
 
-							return anchor;
-						} else
-							return splittedByMentions;
-					})
-				);
+					if (matchForMention && matchForMention[1] && matchForMention[2]) {
+						const anchor = document.createElement("a");
+							  anchor.href = encodeURI(window.location.origin + "/u/" + matchForMention[1]);
+							  anchor.innerText = matchForMention[2];
+
+						return anchor;
+					} else
+						return splittedByMentions;
+				})
+			);
 
 			return paragraph;
 		});
@@ -352,13 +353,13 @@ const GlobalSeeUnseenComments = () => {
 				} else {
 					commentTextElem.innerHTML = null;
 					commentTextElem.append(...LocalGetLayoutForDecryptedMessage());
-				};
-			};
+				}
+			}
 		});
 
-		const commentFooter = comment.querySelector(".comment__footer");
+		const commentAction = comment.querySelector(".comment__action");
+		if (commentAction) commentAction.after(unspyButton);
 
-		if (commentFooter) commentFooter.appendChild(unspyButton);
 		comment.classList.add("s42-underside-active");
 	});
 };
@@ -376,28 +377,33 @@ const ObserverCallback = (mutationsList, observer) => {
 		if (mutation.type !== "childList") continue;
 
 
-
 		if ([
-			"comment",
-			"comment__space",
-			"comment__self",
+			"comments",
 			"comments__content",
-			"comments__item__self",
-			"comments__item__other",
-			"comments__item__children"
+			"comments__body",
+			"comment",
+			"comment__content",
+			"comment__detail",
+			"comment__text"
 		].some((checkingClass) => mutation.target.classList.contains(checkingClass))) {
+			mutation.target.classList.remove("s42-underside-seen", "s42-underside-active");
+
 			GlobalSeeUnseenComments();
-		};
+		}
 
 
-		if (mutation.target.classList.contains("comments_form__editor") | mutation.target.classList.contains("thesis") | mutation.target.classList.contains("thesis__content")) {
+		if (
+			mutation.target.classList.contains("comments_form__editor") ||
+			mutation.target.classList.contains("thesis") ||
+			mutation.target.classList.contains("thesis__content")
+		) {
 			observer.disconnect();
 
 			GlobalAddCommentsSpyButton();
 
 			observingChecker = false;
-		};
-	};
+		}
+	}
 };
 
 const commentsObserver = new MutationObserver(ObserverCallback);
@@ -431,7 +437,7 @@ const GlobalTrackingPageProcedure = () => {
 		const contentID = parseInt(/^\/(?:u|s)\//.test(window.location.pathname) ? window.location.pathname.match(/^\/(?:u|s)\/[^\/]+\/(\d+)/)?.[1] : window.location.pathname.match(/^\/\w+\/(\d+)/)?.[1]);
 
 		if (contentID)
-			GlobalWaitForElement(".comments__body").then(() => GlobalSeeUnseenComments());
+			GlobalWaitForElement(".comments__body").then(GlobalSeeUnseenComments);
 	}, 2e3);
 };
 
