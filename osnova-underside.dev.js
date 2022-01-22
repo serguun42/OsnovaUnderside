@@ -2,7 +2,7 @@
 // @name         Osnova Underside
 // @website      https://tjournal.ru/199990
 // @website      https://tjcache.pw/
-// @version      1.3.3-A (2021-12-08)
+// @version      1.3.4-A (2021-12-09)
 // @author       serguun42 - frontend, qq - backend
 // @icon         https://serguun42.ru/resources/osnova_icons/tj.site.logo_256x256.png
 // @icon64       https://serguun42.ru/resources/osnova_icons/tj.site.logo_64x64.png
@@ -27,7 +27,7 @@
 const
 	SITE = window.location.hostname.split(".")[0],
 	RESOURCES_DOMAIN = "serguun42.ru",
-	VERSION = "1.3.3";
+	VERSION = "1.3.4";
 
 
 
@@ -383,13 +383,9 @@ const ObserverCallback = (mutationsList, observer) => {
 			"comments__body",
 			"comment",
 			"comment__content",
-			"comment__detail",
 			"comment__text"
-		].some((checkingClass) => mutation.target.classList.contains(checkingClass))) {
-			mutation.target.classList.remove("s42-underside-seen", "s42-underside-active");
-
+		].some((checkingClass) => mutation.target.classList.contains(checkingClass)))
 			GlobalSeeUnseenComments();
-		}
 
 
 		if (
